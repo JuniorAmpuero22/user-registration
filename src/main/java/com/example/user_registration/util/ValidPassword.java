@@ -1,4 +1,4 @@
-package com.example.user_registration.Util;
+package com.example.user_registration.util;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.ElementType;

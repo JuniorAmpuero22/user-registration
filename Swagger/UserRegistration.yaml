@@ -1,0 +1,147 @@
+openapi: 3.0.1
+info:
+  title: User Registration API
+  description: API RESTful de creación de usuarios
+  version: 1.0.0
+paths:
+  /api/users/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        description: User registration request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+        required: true
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/users/{id}:
+    put:
+      summary: Update an existing user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: User update request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+        required: true
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/users/{userId}:
+    delete:
+      summary: Delete an existing user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    UserDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Juan Rodriguez
+        email:
+          type: string
+          format: email
+          example: juan@rodriguez.org
+        password:
+          type: string
+          example: Hunter2@
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneDto'
+    PhoneDto:
+      type: object
+      properties:
+        number:
+          type: string
+          example: "1234567"
+        citycode:
+          type: string
+          example: "1"
+        countrycode:
+          type: string
+          example: "57"
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: fb937c40-c2ee-4a2b-91a3-ca754a9a9756
+        created:
+          type: string
+          format: date
+          example: "17/08/2024"
+        modified:
+          type: string
+          format: date
+          example: "17/08/2024"
+        lastLogin:
+          type: string
+          format: date
+          example: "17/08/2024"
+        token:
+          type: string
+          example: baaa4298-fd79-41e4-afc3-5d662c2cf208
+        active:
+          type: boolean
+          example: true
+    ErrorResponse:
+      type: object
+      properties:
+        mensaje:
+          type: string
+          example: Error de validación

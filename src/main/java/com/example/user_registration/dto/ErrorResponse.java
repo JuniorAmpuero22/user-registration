@@ -5,9 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PhoneDto {
+public class ErrorResponse {
 
-    private String number;
-    private String cityCode;
-    private String countryCode;
+    private String mensaje;
 }

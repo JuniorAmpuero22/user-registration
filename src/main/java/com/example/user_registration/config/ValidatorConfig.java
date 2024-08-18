@@ -1,6 +1,6 @@
 package com.example.user_registration.config;
 
-import com.example.user_registration.Util.PasswordValidator;
+import com.example.user_registration.util.PasswordValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

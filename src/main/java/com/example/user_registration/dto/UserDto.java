@@ -1,6 +1,6 @@
 package com.example.user_registration.dto;
 
-import com.example.user_registration.Util.ValidPassword;
+import com.example.user_registration.util.ValidPassword;
 import lombok.Data;
 
 import javax.validation.constraints.Email;

@@ -1,4 +1,4 @@
-package com.example.user_registration.Util;
+package com.example.user_registration.util;
 
 import org.springframework.beans.factory.annotation.Value;
 

@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.example.user_registration.util.constantes.MESSAGE_EMAIL_ALREADY_REGISTERED;
+import static com.example.user_registration.util.constantes.MESSAGE_USER_NOT_FOUND;
+
 @Service
 public class UserService {
 
@@ -23,10 +26,9 @@ public class UserService {
 
     public UserResponse createUser(UserDto userDto) {
         if (userRepository.existsByEmail(userDto.getEmail())) {
-            throw new IllegalArgumentException("El correo ya registrado");
+            throw new IllegalArgumentException(MESSAGE_EMAIL_ALREADY_REGISTERED);
         }
 
-        // Mapear UserDto a User
         User user = new User();
         user.setId(UUID.fromString(UUID.randomUUID().toString()));
         user.setName(userDto.getName());
@@ -42,8 +44,8 @@ public class UserService {
             List<Phone> phones = userDto.getPhones().stream().map(phoneDto -> {
                 Phone phone = new Phone();
                 phone.setNumber(phoneDto.getNumber());
-                phone.setCitycode(phoneDto.getCitycode());
-                phone.setCountrycode(phoneDto.getCountrycode());
+                phone.setCitycode(phoneDto.getCityCode());
+                phone.setCountrycode(phoneDto.getCountryCode());
                 phone.setUser(user);
                 return phone;
             }).collect(Collectors.toList());
@@ -64,23 +66,18 @@ public class UserService {
 
     @Transactional
     public UserResponse updateUser(UUID userId, UserDto userDto) {
-        // Buscar el usuario existente por ID
         User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException(MESSAGE_USER_NOT_FOUND));
 
-        // Actualizar campos básicos del usuario
         existingUser.setName(userDto.getName());
         existingUser.setEmail(userDto.getEmail());
         existingUser.setPassword(userDto.getPassword());
         existingUser.setModified(LocalDateTime.now());
 
-        // Manejo de la lista de teléfonos
         updatePhoneList(existingUser, userDto.getPhones());
 
-        // Guardar el usuario actualizado en la base de datos
         User savedUser = userRepository.save(existingUser);
 
-        // Crear y retornar la respuesta con los datos correctos
         return new UserResponse(
                 savedUser.getId(),
                 savedUser.getCreated(),
@@ -94,23 +91,20 @@ public class UserService {
     @Transactional
     public void deleteUser(UUID userId) {
         if (!userRepository.existsById(userId)) {
-            throw new IllegalArgumentException("Usuario no encontrado");
+            throw new IllegalArgumentException(MESSAGE_USER_NOT_FOUND);
         }
         userRepository.deleteById(userId);
     }
 
     private void updatePhoneList(User existingUser, List<PhoneDto> phoneDtos) {
-        // Limpiar la lista de teléfonos existente
         existingUser.getPhones().clear();
-
-        // Mapear los nuevos PhoneDto a entidades Phone y asociarlos al usuario
         if (phoneDtos != null) {
             for (PhoneDto phoneDto : phoneDtos) {
                 Phone phone = new Phone();
                 phone.setNumber(phoneDto.getNumber());
-                phone.setCitycode(phoneDto.getCitycode());
-                phone.setCountrycode(phoneDto.getCountrycode());
-                phone.setUser(existingUser);  // Asociar el teléfono con el usuario existente
+                phone.setCitycode(phoneDto.getCityCode());
+                phone.setCountrycode(phoneDto.getCountryCode());
+                phone.setUser(existingUser);
                 existingUser.getPhones().add(phone);
             }
         }

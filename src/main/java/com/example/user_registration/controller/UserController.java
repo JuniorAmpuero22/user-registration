@@ -1,5 +1,6 @@
 package com.example.user_registration.controller;
 
+import com.example.user_registration.dto.ErrorResponse;
 import com.example.user_registration.dto.UserDto;
 import com.example.user_registration.dto.UserResponse;
 import com.example.user_registration.service.UserService;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
+
+import static com.example.user_registration.util.constantes.MESSAGE_USER_DELETED;
+import static com.example.user_registration.util.constantes.MESSAGE_USER_NOT_FOUND;
 
 @RestController
 @RequestMapping("/api/users")
@@ -42,21 +46,10 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable UUID userId) {
         try {
             userService.deleteUser(userId);
-            return ResponseEntity.ok("Registro Eliminado");
+            return ResponseEntity.ok(MESSAGE_USER_DELETED);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(MESSAGE_USER_NOT_FOUND);
         }
     }
 
-    public static class ErrorResponse {
-        private String mensaje;
-
-        public ErrorResponse(String mensaje) {
-            this.mensaje = mensaje;
-        }
-
-        public String getMensaje() {
-            return mensaje;
-        }
-    }
 }
